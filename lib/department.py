@@ -57,7 +57,7 @@ class Department:
         """ Initialize a new Department instance and save the object to the database """
         department = cls(name, location)
         department.save()
-        return department
+        return department 
 
     def update(self):
         """Update the table row corresponding to the current Department instance."""
@@ -139,3 +139,21 @@ class Department:
 
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
+
+    def employees(self):
+        """Return list of employees associated with current department"""
+        from employee import Employee
+        sql = """
+            SELECT * FROM employees
+            WHERE department_id = ?
+        """
+        CURSOR.execute(sql, (self.id,),)
+
+        rows = CURSOR.fetchall()
+        return [
+            Employee.instance_from_db(row) for row in rows
+        ] 
+
+
+        
+   
